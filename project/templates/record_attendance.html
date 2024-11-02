@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Attendance</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            try {
+                const accessToken = document.cookie.split('; ').find(row => row.startsWith('access_token=')).split('=')[1];
+            }
+            catch (error) {
+                console.log(error);
+                alert('Access token is missing. Please log in.');
+                window.location.href = '/signin';
+            }
+            const admin = document.cookie.split('; ').find(row => row.startsWith('role=')).split('=')[1] === 'admin';
+            if (admin) {
+                
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Record Attendance</h1>
+    <!-- Content for recording attendance goes here -->
+</body>
+</html>
