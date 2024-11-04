@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
 from project.controllers.token_controller import verify_token
 from project.controllers.attendance_controller import add_attendance
+from project.db import users_collection
+import random
 
 app = Blueprint('attendance', __name__)
 
@@ -10,14 +12,10 @@ def record_attendance():
         return render_template('record_attendance.html')
     token = request.cookies.get('access_token')
     if not token or not verify_token(token):
-        token = request.cookies.get('refresh_access_token')
-        if not token or not verify_token(token):
-            return render_template('login.html', message="You need to login to access this page")
-    
-    data = request.get_json()
-    name = data.get('name')
-    section = data.get('section')
-    number = data.get('number')
+        return jsonify({'message': 'Token is invalid or expired'}), 401
 
-    add_attendance(name, section, number)
+
+
+    user = users_collection.find_one({'_id': verify_token(token)['sub']})
+    add_attendance(user)
     return jsonify({'message': 'Attendance recorded'}), 200
