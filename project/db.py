@@ -7,3 +7,4 @@ mongo_uri = f"mongodb+srv://{mongo_user}:{mongo_password}@firstserver.z0ezt.mong
 client = MongoClient(mongo_uri)
 db = client['qr-attendance']
 users_collection = db['users']
+attendance_collection = db['attendance']
