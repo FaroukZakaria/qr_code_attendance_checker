@@ -1,7 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
-from project.controllers.token_controller import verify_token
-from project.controllers.attendance_controller import add_attendance
-
+from flask import Blueprint, render_template
 
 app = Blueprint('utils', __name__)
 
