@@ -92,9 +92,6 @@
                     if (data.message === 'Invalid credentials') {
                         alert(data.message);
                     } else {
-                        document.cookie = `access_token=${data['access_token']}; path=/; secure; samesite=strict;`;
-                        document.cookie = `refresh_token=${data['refresh_token']}; path=/; secure; samesite=strict;`;
-                        document.cookie = `role=${data['role']}; path=/; secure; samesite=strict;`;
                         alert("Successfully signed in.");
                         window.location.href = '/record-attendance';
                     }
