@@ -10,7 +10,6 @@
                 const accessToken = document.cookie.split('; ').find(row => row.startsWith('access_token=')).split('=')[1];
             }
             catch (error) {
-                console.log(error);
                 alert('Access token is missing. Please log in.');
                 window.location.href = '/signin';
             }
@@ -20,9 +19,28 @@
             }
         });
     </script>
+    <script src="https://unpkg.com/qr-scanner@1.2.0/qr-scanner.min.js"></script>
 </head>
 <body>
     <h1>Record Attendance</h1>
     <!-- Content for recording attendance goes here -->
+     <video id="qr-video" width="100%"></video>
+     <script>
+        const video = document.getElementById('qr-video');
+        const scanner = new QrScanner(video, result => handleQRCode(result));
+        scanner.start();
+        function handleQRCode(data) {
+            fetch('/record-attendance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: data })
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+     </script>
 </body>
 </html>
