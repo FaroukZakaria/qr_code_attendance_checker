@@ -1,7 +1,7 @@
 import datetime, bcrypt
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token
 from project.db import *
-from flask import request, jsonify, Blueprint, render_template
+from flask import request, jsonify, Blueprint, render_template, make_response
 from project.models.users_model import User
 from project.controllers.user_controller import *
 
@@ -18,6 +18,9 @@ def register():
     section = int(data.get('section'))
     number = int(data.get('number'))
     password = data.get('password')
+
+    if not name or not section or not number or not password:
+        return jsonify({'message': 'Please provide all the required fields'}), 400
 
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
@@ -48,7 +51,12 @@ def login():
     user = get_user_by_section_and_number(section, number)
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
-        refresh_token = create_refresh_token(str(user['_id']), expires_delta=datetime.timedelta(days=7))
-        return jsonify({'access_token': access_token, 'refresh_token': refresh_token, 'role': user['role']}), 200
+        response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
+
+        response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Strict')
+
+        response.set_cookie('role', user['role'], httponly=True, secure=True, samesite='Strict')
+
+        return response
 
     return jsonify({'message': 'Invalid credentials'}), 401
