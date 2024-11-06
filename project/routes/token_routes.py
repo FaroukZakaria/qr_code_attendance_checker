@@ -9,6 +9,7 @@ app = Blueprint('token', __name__)
 def check_auth():
     token = request.cookies.get('access_token')
     if not token or not verify_token(token):
+        #print(f"Token: {token}")
         return jsonify({'message': 'Token is invalid or expired'}), 401
     is_admin = request.cookies.get('role') == 'admin'
     user_name = users_collection.find_one({'_id': ObjectId(verify_token(token)['sub'])})['name']
