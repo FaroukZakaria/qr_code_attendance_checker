@@ -53,9 +53,11 @@ def login():
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
         response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
 
-        response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Strict')
+        response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
-        response.set_cookie('role', user['role'], httponly=True, secure=True, samesite='Strict')
+        response.set_cookie('role', user['role'], httponly=True, secure=False, samesite='Strict')
+
+        #print(f"response cookies: {response.headers}")
 
         return response
 
@@ -103,9 +105,9 @@ def login_admin():
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
         response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
 
-        response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Strict')
+        response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
-        response.set_cookie('role', user['role'], httponly=True, secure=True, samesite='Strict')
+        response.set_cookie('role', user['role'], httponly=True, secure=False, samesite='Strict')
 
         return response
 
@@ -114,6 +116,6 @@ def login_admin():
 @user_routes.route('/signout', methods=['GET'])
 def logout():
     response = make_response(jsonify({'message': 'successfully logged out'}), 200)
-    response.set_cookie('access_token', '', expires=0, httponly=True, secure=True, samesite='Strict')
-    response.set_cookie('role', '', expires=0, httponly=True, secure=True, samesite='Strict')
+    response.set_cookie('access_token', '', expires=0, httponly=True, secure=False, samesite='Strict')
+    response.set_cookie('role', '', expires=0, httponly=True, secure=False, samesite='Strict')
     return response
