@@ -7,3 +7,9 @@ class User(BaseModel):
     number: int
     password: bytes
     role: str
+
+class AdminUser(BaseModel):
+    name: str
+    email: str
+    password: bytes
+    role: str
