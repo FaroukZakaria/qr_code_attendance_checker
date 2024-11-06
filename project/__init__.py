@@ -4,6 +4,7 @@ from flask import Flask
 from project.routes.user_routes import user_routes
 from project.routes.utils import app as utils
 from project.routes.attendance_routes import app as attendance
+from project.routes.token_routes import app as token
 
 app = Flask(__name__)
 # configure the app
@@ -15,3 +16,4 @@ JWTManager(app)
 app.register_blueprint(user_routes)
 app.register_blueprint(utils)
 app.register_blueprint(attendance)
+app.register_blueprint(token)
