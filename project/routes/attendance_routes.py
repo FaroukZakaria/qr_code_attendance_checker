@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
 from project.controllers.token_controller import verify_token
 from project.controllers.attendance_controller import add_attendance
-from project.db import users_collection
+from project.controllers.user_controller import get_user_by_token
 
 app = Blueprint('attendance', __name__)
 
@@ -15,6 +15,7 @@ def record_attendance():
 
 
 
-    user = users_collection.find_one({'_id': verify_token(token)['sub']})
-    add_attendance(user)
-    return jsonify({'message': 'Attendance recorded'}), 200
+    #user = get_user_by_token(token)
+    #add_attendance(user)
+    #return jsonify({'message': 'Attendance recorded'}), 200
+    return jsonify({'message': str(request.get_json().get('id'))}), 200
