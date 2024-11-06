@@ -1,72 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Record Attendance</title>
     <script>
-        let userName;
-        let admin;
-        document.addEventListener("DOMContentLoaded", async function() {
-            const response = await fetch('/check-auth');
-            if (response.status === 401) {
-                alert('Access token is invalid or expired. Please log in again.');
-                window.location.href = '/signin';
-                return;
-            }
-            const data = await response.json();
-            userName = data.name;
-            admin = data.admin;
-            if (admin) {
-                document.getElementById('name').innerText = `Welcome, ${userName}!`;
-                document.getElementById('admin').innerText = 'Admin';
-            } else {
-                console.log(userName, admin);
-                document.getElementById('name').innerText = `Welcome, ${userName}!`;
-                document.getElementById('admin').innerText = 'Not admin';
-            }
-        });
-    </script>
-    <script src="https://unpkg.com/qr-scanner@1.2.0/qr-scanner.min.js"></script>
-</head>
-<body>
-    <button style="position: absolute; top: 10px; right: 10px; background-color: blue; color: white; padding: 15px 25px; margin: 10px; border: none; cursor: pointer; font-size: 16px;" onclick="logout()">Log Out</button>
-    <script>
-        function logout() {
-            fetch('/signout', {
-                method: 'GET'
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = '/';
-                } else {
-                    alert('Logout failed.');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+      let userName;
+      let admin;
+      document.addEventListener("DOMContentLoaded", async function () {
+        const response = await fetch("/check-auth");
+        if (response.status === 401) {
+          alert("Access token is invalid or expired. Please log in again.");
+          window.location.href = "/signin";
+          return;
         }
+        const data = await response.json();
+        userName = data.name;
+        admin = data.admin;
+        if (admin) {
+          document.getElementById("name").innerText = `Welcome, ${userName}!`;
+          document.getElementById("admin").innerText = "Admin";
+        } else {
+          document.getElementById("name").innerText = `Welcome, ${userName}!`;
+          document.getElementById("admin").innerText = "Not admin";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <button
+      style="
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: blue;
+        color: white;
+        padding: 15px 25px;
+        margin: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      "
+      onclick="logout()"
+    >
+      Log Out
+    </button>
+    <script>
+      function logout() {
+        fetch("/signout", {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/";
+            } else {
+              alert("Logout failed.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
     </script>
     <h1>Record Attendance</h1>
     <h2 id="admin"></h2>
     <h3 id="name"></h3>
     <!-- Content for recording attendance goes here -->
-     <video id="qr-video" width="100%"></video>
-     <script>
-        const video = document.getElementById('qr-video');
-        const scanner = new QrScanner(video, result => handleQRCode(result));
-        scanner.start();
-        function handleQRCode(data) {
-            fetch('/record-attendance', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id: data })
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-     </script>
-</body>
+    <video id="qr-video" width="100%"></video>
+    <script type="module">
+      import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
+      QrScanner.WORKER_PATH =
+        "https://unpkg.com/qr-scanner/qr-scanner-worker.min.js";
+
+      const video = document.getElementById("qr-video");
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      const scanner = new QrScanner(video, (result) => handleQRCode(result));
+      scanner.start();
+      function handleQRCode(data) {
+        fetch("/record-attendance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: data }),
+        }).catch((error) => {
+          console.error("Error:", error);
+        });
+      }
+    </script>
+  </body>
 </html>
