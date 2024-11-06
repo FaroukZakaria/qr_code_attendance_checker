@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, render_template
 from project.controllers.token_controller import verify_token
 from project.controllers.attendance_controller import add_attendance
 from project.db import users_collection
-import random
 
 app = Blueprint('attendance', __name__)
 
