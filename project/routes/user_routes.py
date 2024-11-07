@@ -53,8 +53,6 @@ def login():
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
         response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
 
-        response.headers['Content-Type'] = 'application/json'
-
         response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
         response.set_cookie('role', user['role'], httponly=True, secure=False, samesite='Strict')
@@ -106,8 +104,6 @@ def login_admin():
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
         response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
-
-        response.headers['Content-Type'] = 'application/json'
 
         response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
