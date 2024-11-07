@@ -61,7 +61,7 @@ def login():
 
         #return response, 200
 
-        return {'message': 'successfully logged in', 'role': user['role']}, 200
+        return jsonify({'message': 'successfully logged in', 'role': user['role']}), 200
 
     return jsonify({'message': 'Invalid credentials'}), 401
 
