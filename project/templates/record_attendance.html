@@ -118,7 +118,10 @@
       }
 
       function handleQRCode(data) {
-        if (!scanningActive) return;
+        if (!scanningActive) {
+          alert("FALSE");
+          return;
+        }
         console.log("QR Code detected:", data);
         fetch("/record-attendance", {
           method: "POST",
