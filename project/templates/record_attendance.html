@@ -89,39 +89,29 @@
       <div id="detection-box"></div>
     </div>
     <script type="module">
-      import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
-      QrScanner.WORKER_PATH =
-        "https://unpkg.com/qr-scanner/qr-scanner-worker.min.js";
+      import { Html5Qrcode } from "https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js";
 
-      // Wrap in an async function
       async function initQrScanner() {
         try {
-          let scanningActive = true;
-          // Access the camera
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: "environment" } },
-            width: { ideal: 640 }, // Adjust width to a lower value for better performance
-            height: { ideal: 480 }, // Adjust height as needed
-          });
-          const videoElement = document.getElementById("qr-video");
-          videoElement.srcObject = stream;
-          videoElement.play();
+          const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            handleQRCode(decodedText);
+          };
 
-          // Initialize QrScanner
-          const scanner = new QrScanner(videoElement, (result) =>
-            handleQRCode(result)
+          const config = { fps: 10, qrbox: 250 };
+          const html5QrCode = new Html5Qrcode("qr-video");
+
+          await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            qrCodeSuccessCallback
           );
-          scanner.start();
         } catch (error) {
-          console.error("Error accessing camera: ", error);
+          console.error("Error initializing QR scanner: ", error);
         }
       }
 
       function handleQRCode(data) {
-        if (!scanningActive) {
-          alert("FALSE");
-          return;
-        }
         console.log("QR Code detected:", data);
         fetch("/record-attendance", {
           method: "POST",
@@ -137,12 +127,6 @@
           })
           .catch((error) => {
             console.error("Error:", error);
-          })
-          .finally(() => {
-            // Re-enable scanning after a short delay
-            setTimeout(() => {
-              scanningActive = true;
-            }, 3000); // Adjust the delay (in milliseconds) as needed
           });
       }
 
@@ -150,6 +134,6 @@
       initQrScanner();
     </script>
 
-    <video id="qr-video" style="width: 300px; height: 300px"></video>
+    <div id="qr-video" style="width: 300px; height: 300px"></div>
   </body>
 </html>
