@@ -73,7 +73,9 @@
         "https://unpkg.com/qr-scanner/qr-scanner-worker.min.js";
 
       const video = document.getElementById("qr-video");
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } },
+      });
       video.srcObject = stream;
       const scanner = new QrScanner(video, (result) => handleQRCode(result));
       scanner.start();
