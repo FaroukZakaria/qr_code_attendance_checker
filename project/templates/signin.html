@@ -99,7 +99,7 @@
               password: password,
             }),
           })
-            .then((response) => response.json())
+            //.then((response) => response.json())
             .then((data) => {
               if (data.message === "Invalid credentials") {
                 alert(data.message);
