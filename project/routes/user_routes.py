@@ -51,17 +51,13 @@ def login():
     user = get_user_by_section_and_number(section, number)
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
-        response =  jsonify({'message': 'successfully logged in', 'role': user['role']})
+        response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}), 200)
 
         response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
         response.set_cookie('role', user['role'], httponly=True, secure=False, samesite='Strict')
 
-        #print(f"response cookies: {response.headers}")
-
-        #return response, 200
-
-        return jsonify({'message': 'successfully logged in', 'role': user['role']}), 200
+        return response
 
     return jsonify({'message': 'Invalid credentials'}), 401
 

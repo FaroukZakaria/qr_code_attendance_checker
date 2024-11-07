@@ -1,10 +1,13 @@
 import os
+from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 from flask import Flask
 from project.routes.user_routes import user_routes
 from project.routes.utils import app as utils
 from project.routes.attendance_routes import app as attendance
 from project.routes.token_routes import app as token
+
+load_dotenv()
 
 app = Flask(__name__)
 # configure the app
