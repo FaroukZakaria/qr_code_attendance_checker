@@ -72,24 +72,50 @@
       QrScanner.WORKER_PATH =
         "https://unpkg.com/qr-scanner/qr-scanner-worker.min.js";
 
-      const video = document.getElementById("qr-video");
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" } },
-      });
-      video.srcObject = stream;
-      const scanner = new QrScanner(video, (result) => handleQRCode(result));
-      scanner.start();
+      // Wrap in an async function
+      async function initQrScanner() {
+        try {
+          // Access the camera
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } },
+          });
+          const videoElement = document.getElementById("qr-video");
+          videoElement.srcObject = stream;
+          videoElement.play();
+
+          // Initialize QrScanner
+          const scanner = new QrScanner(videoElement, (result) =>
+            handleQRCode(result)
+          );
+          scanner.start();
+        } catch (error) {
+          console.error("Error accessing camera: ", error);
+        }
+      }
+
       function handleQRCode(data) {
+        console.log("QR Code detected:", data);
         fetch("/record-attendance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ id: data }),
-        }).catch((error) => {
-          console.error("Error:", error);
-        });
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            alert("Attendance recorded successfully.");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
+
+      // Call the function to initialize the scanner
+      initQrScanner();
     </script>
+
+    <video id="qr-video" style="width: 300px; height: 300px"></video>
   </body>
 </html>
