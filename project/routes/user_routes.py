@@ -51,7 +51,7 @@ def login():
     user = get_user_by_section_and_number(section, number)
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         access_token = create_access_token(str(user['_id']), expires_delta=datetime.timedelta(minutes=15))
-        response =  make_response(jsonify({'message': 'successfully logged in', 'role': user['role']}))
+        response =  jsonify({'message': 'successfully logged in', 'role': user['role']})
 
         response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict')
 
