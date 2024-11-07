@@ -11,7 +11,9 @@ load_dotenv()
 
 app = Flask(__name__)
 # configure the app
+print(f"SECRET_KEY BEFORE: {os.getenv('SECRET_KEY')}")
 app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
+print(f"SECRET_KEY AFTER: {os.getenv('SECRET_KEY')}")
 app.config['JWT_REFRESH_SECRET_KEY'] = os.getenv('SECRET_KEY_REFRESH')
 JWTManager(app)
 
