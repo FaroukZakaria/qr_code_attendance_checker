@@ -28,6 +28,13 @@
     </script>
   </head>
   <body>
+    <style>
+      #qr-video {
+        width: 100%;
+        max-width: 300px; /* Limit the maximum width to 300px */
+        height: auto; /* Maintain aspect ratio */
+      }
+    </style>
     <button
       style="
         position: absolute;
@@ -78,6 +85,8 @@
           // Access the camera
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: { exact: "environment" } },
+            width: { ideal: 640 }, // Adjust width to a lower value for better performance
+            height: { ideal: 480 }, // Adjust height as needed
           });
           const videoElement = document.getElementById("qr-video");
           videoElement.srcObject = stream;
