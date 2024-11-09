@@ -98,7 +98,6 @@
       <div id="detection-box"></div>
     </div>
     <script type="module">
-      document.getElementById("report").innerText = scanningActive;
       import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
 
       // Wrap in an async function
@@ -162,6 +161,5 @@
       // Call the function to initialize the scanner
       initQrScanner();
     </script>
-    <video id="qr-video" style="width: 300px; height: 300px"></video>
   </body>
 </html>
