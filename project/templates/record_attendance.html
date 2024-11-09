@@ -88,7 +88,7 @@
     <h1>Record Attendance</h1>
     <h2 id="admin"></h2>
     <h3 id="name"></h3>
-    <p id="report"></p>
+    <p id="report">TEST</p>
     <!-- Content for recording attendance goes here -->
     <div
       id="video-container"
@@ -107,8 +107,8 @@
           // Access the camera
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: { exact: "environment" } },
-            width: { ideal: 1280 }, // Adjust width to a lower value for better performance
-            height: { ideal: 720 }, // Adjust height as needed
+            width: { ideal: 640 }, // Adjust width to a lower value for better performance
+            height: { ideal: 480 }, // Adjust height as needed
           });
           const videoElement = document.getElementById("qr-video");
           videoElement.srcObject = stream;
