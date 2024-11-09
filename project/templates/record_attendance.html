@@ -11,6 +11,9 @@
         const response = await fetch("/check-auth");
         if (response.status === 401) {
           alert("Access token is invalid or expired. Please log in again.");
+          await fetch("/signout", {
+            method: "GET",
+          });
           window.location.href = "/signin";
           return;
         }
@@ -32,6 +35,7 @@
       #qr-video {
         width: 100%;
         max-width: 300px; /* Limit the maximum width to 300px */
+        max-height: 300px; /* Limit the maximum height to 300px */
         height: auto; /* Maintain aspect ratio */
       }
       #detection-box {
@@ -84,14 +88,15 @@
     <h2 id="admin"></h2>
     <h3 id="name"></h3>
     <!-- Content for recording attendance goes here -->
-    <div id="video-container" style="position: relative; display: inline-block">
+    <div
+      id="video-container"
+      style="position: relative; display: inline-block; align-items: center"
+    >
       <video id="qr-video" style="width: 100%; height: auto"></video>
       <div id="detection-box"></div>
     </div>
     <script type="module">
       import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
-      QrScanner.WORKER_PATH =
-        "https://unpkg.com/qr-scanner/qr-scanner-worker.min.js";
 
       // Wrap in an async function
       async function initQrScanner() {
