@@ -88,6 +88,7 @@
     <h1>Record Attendance</h1>
     <h2 id="admin"></h2>
     <h3 id="name"></h3>
+    <p id="report"></p>
     <!-- Content for recording attendance goes here -->
     <div
       id="video-container"
@@ -97,6 +98,7 @@
       <div id="detection-box"></div>
     </div>
     <script type="module">
+      document.getElementById("report").innerText = scanningActive;
       import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
 
       // Wrap in an async function
@@ -119,16 +121,19 @@
           );
           scanner.start();
         } catch (error) {
+          document.getElementById("report").innerText =
+            "Error accessing camera";
           console.error("Error accessing camera: ", error);
         }
       }
 
       function handleQRCode(data) {
         if (!scanningActive) {
-          alert("FALSE");
+          document.getElementById("report").innerText = "FALSE";
           return;
         }
         console.log("QR Code detected:", data);
+        document.getElementById("report").innerText = data;
         fetch("/record-attendance", {
           method: "POST",
           headers: {
@@ -139,10 +144,12 @@
           .then((response) => response.json())
           .then((data) => {
             console.log("Success:", data);
-            alert(data.message);
+            document.getElementById("report").innerText = data;
           })
           .catch((error) => {
             console.error("Error:", error);
+            document.getElementById("report").innerText =
+              "Error recording attendance";
           })
           .finally(() => {
             // Re-enable scanning after a short delay
@@ -155,7 +162,5 @@
       // Call the function to initialize the scanner
       initQrScanner();
     </script>
-
-    <video id="qr-video" style="width: 300px; height: 300px"></video>
   </body>
 </html>
