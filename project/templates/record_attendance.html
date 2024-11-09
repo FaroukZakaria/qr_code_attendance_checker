@@ -48,6 +48,7 @@
         transform: translate(-50%, -50%);
         pointer-events: none; /* Allows clicks to pass through */
         z-index: 1; /* Ensures it's on top of the video */
+        display: none;
       }
     </style>
     <button
@@ -90,7 +91,7 @@
     <!-- Content for recording attendance goes here -->
     <div
       id="video-container"
-      style="position: relative; display: inline-block; align-items: center"
+      style="position: relative; display: inline-block; align-content: center"
     >
       <video id="qr-video" style="width: 100%; height: auto"></video>
       <div id="detection-box"></div>
