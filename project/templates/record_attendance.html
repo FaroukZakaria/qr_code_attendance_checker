@@ -88,19 +88,39 @@
     <h1>Record Attendance</h1>
     <h2 id="admin"></h2>
     <h3 id="name"></h3>
-    <p id="report">TEST</p>
+    <p id="reportTemp">TEST</p>
     <!-- Content for recording attendance goes here -->
-    <div
-      id="video-container"
-      style="position: relative; display: inline-block; align-content: center"
-    >
-      <video id="qr-video" style="width: 100%; height: auto"></video>
+    <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <div style="width: 500px" id="reader">
+      <div id="report"></div>
       <div id="detection-box"></div>
     </div>
-    <script type="module">
-      import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
+    <script>
+      var resultContainer = document.getElementById("report");
+      var lastResult = 0;
+      function onScanSuccess(decodedText, decodedResult) {
+        if (decodedText !== lastResult) {
+          lastResult = decodedText;
+          document.getElementById("reportTemp").innerHTML =
+            (`Scan result = ${decodedText}`, decodedResult);
 
-      // Wrap in an async function
+          resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;
+
+          // Optional: To close the QR code scannign after the result is found
+          html5QrcodeScanner.clear();
+        }
+      }
+      function onScanError(errorMessage) {
+        document.getElementById("reportTemp").innerText = errorMessage;
+      }
+
+      var html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+        fps: 10,
+        qrbox: 250,
+      });
+      html5QrcodeScanner.render(onScanSuccess, onScanError);
+      /*// Wrap in an async function
       async function initQrScanner() {
         try {
           let scanningActive = true;
@@ -159,7 +179,7 @@
       }
 
       // Call the function to initialize the scanner
-      initQrScanner();
+      initQrScanner();*/
     </script>
   </body>
 </html>
