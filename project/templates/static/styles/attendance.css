@@ -1,0 +1,23 @@
+.logout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: blue;
+    color: white;
+    padding: 15px 25px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.scanner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
