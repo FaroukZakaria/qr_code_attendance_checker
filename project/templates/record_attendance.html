@@ -4,182 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Record Attendance</title>
-    <script>
-      let userName;
-      let admin;
-      document.addEventListener("DOMContentLoaded", async function () {
-        const response = await fetch("/check-auth");
-        if (response.status === 401) {
-          alert("Access token is invalid or expired. Please log in again.");
-          await fetch("/signout", {
-            method: "GET",
-          });
-          window.location.href = "/signin";
-          return;
-        }
-        const data = await response.json();
-        userName = data.name;
-        admin = data.admin;
-        if (admin) {
-          document.getElementById("name").innerText = `Welcome, ${userName}!`;
-          document.getElementById("admin").innerText = "Admin";
-        } else {
-          document.getElementById("name").innerText = `Welcome, ${userName}!`;
-          document.getElementById("admin").innerText = "Not admin";
-        }
-      });
-    </script>
+    <link rel="stylesheet" href="static/styles/attendance.css" />
+    <script src="static/scripts/dashboard.js"></script>
+    <script src="static/scripts/logout.js"></script>
+
+    <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
+    <script
+      src="https://unpkg.com/html5-qrcode"
+      type="text/javascript"
+    ></script>
   </head>
   <body>
-    <style>
-      #qr-video {
-        width: 100%;
-        max-width: 300px; /* Limit the maximum width to 300px */
-        max-height: 300px; /* Limit the maximum height to 300px */
-        height: auto; /* Maintain aspect ratio */
-      }
-      #detection-box {
-        position: absolute;
-        border: 4px solid rgba(255, 0, 0, 0.5); /* Semi-transparent red border */
-        width: 150px; /* Adjust size as needed */
-        height: 150px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        pointer-events: none; /* Allows clicks to pass through */
-        z-index: 1; /* Ensures it's on top of the video */
-        display: none;
-      }
-    </style>
-    <button
-      style="
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: blue;
-        color: white;
-        padding: 15px 25px;
-        margin: 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-      "
-      onclick="logout()"
-    >
-      Log Out
-    </button>
-    <script>
-      function logout() {
-        fetch("/signout", {
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              window.location.href = "/";
-            } else {
-              alert("Logout failed.");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-    </script>
-    <h1>Record Attendance</h1>
-    <h2 id="admin"></h2>
-    <h3 id="name"></h3>
-    <p id="reportTemp">TEST</p>
-    <!-- Content for recording attendance goes here -->
-    <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <div style="width: 500px" id="reader">
-      <div id="report"></div>
-      <div id="detection-box"></div>
+    <div class="top">
+      <h1>Record Attendance</h1>
+      <button class="logout" onclick="logout()">Log Out</button>
     </div>
-    <script>
-      var resultContainer = document.getElementById("report");
-      var lastResult = 0;
-      function onScanSuccess(decodedText, decodedResult) {
-        if (decodedText !== lastResult) {
-          lastResult = decodedText;
-          document.getElementById("reportTemp").innerHTML =
-            (`Scan result = ${decodedText}`, decodedResult);
 
-          resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;
-
-          // Optional: To close the QR code scannign after the result is found
-          html5QrcodeScanner.clear();
-        }
-      }
-      function onScanError(errorMessage) {
-        // handle scan error
-      }
-
-      var html5QrcodeScanner = new Html5QrcodeScanner("reader", {
-        fps: 10,
-        qrbox: 250,
-      });
-      html5QrcodeScanner.render(onScanSuccess, onScanError);
-      /*// Wrap in an async function
-      async function initQrScanner() {
-        try {
-          let scanningActive = true;
-          // Access the camera
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: "environment" } },
-            width: { ideal: 640 }, // Adjust width to a lower value for better performance
-            height: { ideal: 480 }, // Adjust height as needed
-          });
-          const videoElement = document.getElementById("qr-video");
-          videoElement.srcObject = stream;
-          videoElement.play();
-
-          // Initialize QrScanner
-          const scanner = new QrScanner(videoElement, (result) =>
-            handleQRCode(result)
-          );
-          scanner.start();
-        } catch (error) {
-          document.getElementById("report").innerText =
-            "Error accessing camera";
-          console.error("Error accessing camera: ", error);
-        }
-      }
-
-      function handleQRCode(data) {
-        if (!scanningActive) {
-          document.getElementById("report").innerText = "FALSE";
-          return;
-        }
-        console.log("QR Code detected:", data);
-        document.getElementById("report").innerText = data;
-        fetch("/record-attendance", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: data }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-            document.getElementById("report").innerText = data;
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            document.getElementById("report").innerText =
-              "Error recording attendance";
-          })
-          .finally(() => {
-            // Re-enable scanning after a short delay
-            setTimeout(() => {
-              scanningActive = true;
-            }, 3000); // Adjust the delay (in milliseconds) as needed
-          });
-      }
-
-      // Call the function to initialize the scanner
-      initQrScanner();*/
-    </script>
+    <div class="student"></div>
+    <div class="admin"></div>
   </body>
 </html>
