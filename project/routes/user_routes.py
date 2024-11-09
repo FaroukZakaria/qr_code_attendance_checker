@@ -113,7 +113,4 @@ def login_admin():
 
 @user_routes.route('/signout', methods=['GET'])
 def logout():
-    response = make_response(jsonify({'message': 'successfully logged out'}), 200)
-    response.set_cookie('access_token', '', expires=0, httponly=True, secure=False, samesite='Strict')
-    response.set_cookie('role', '', expires=0, httponly=True, secure=False, samesite='Strict')
-    return response
+    return sign_out()
