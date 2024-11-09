@@ -9,7 +9,7 @@ from project.routes.token_routes import app as token
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='templates/static')
 # configure the app
 app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['JWT_REFRESH_SECRET_KEY'] = os.getenv('SECRET_KEY_REFRESH')
